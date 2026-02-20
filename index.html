@@ -3,543 +3,1054 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SACRÉA | Agence de Création Visuelle & Design</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fonts : Syne pour les titres (très créatif) et Plus Jakarta Sans pour le texte -->
+    <title>Sa créa — Agence de Création Visuelle</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Icons Phosphor -->
-    <script src="https://unpkg.com/phosphor-icons"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                        display: ['"Syne"', 'sans-serif'],
-                    },
-                    colors: {
-                        sacrea: {
-                            dark: '#0f172a',    // Slate 900
-                            light: '#f8fafc',   // Slate 50
-                            accent1: '#8b5cf6', // Violet
-                            accent2: '#ec4899', // Rose
-                        }
-                    },
-                    backgroundImage: {
-                        'gradient-creative': 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)',
-                        'gradient-dark': 'linear-gradient(to bottom right, #0f172a, #1e293b)',
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Nunito:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
-        body { background-color: #f8fafc; color: #0f172a; overflow-x: hidden; }
-        
-        .text-gradient {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        :root {
+            --violet:     #c084fc;
+            --violet-deep:#9333ea;
+            --violet-dark:#6b21a8;
+            --violet-soft:#ede9fe;
+            --violet-bg:  #f5f0ff;
+            --black:      #0d0d0d;
+            --black-soft: #1a1a2e;
+            --white:      #ffffff;
+            --white-off:  #faf9ff;
+            --gray:       #6b7280;
+            --gray-light: #e5e7eb;
         }
 
-        .btn-gradient {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            color: white;
-            transition: all 0.3s ease;
-            background-size: 200% auto;
-        }
-        .btn-gradient:hover {
-            background-position: right center;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -10px rgba(236, 72, 153, 0.5);
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+            cursor: none;
         }
 
-        /* Effet de flou en arrière-plan (Blobs) */
+        /* ── CURSOR ───────────────────────────── */
+        #c-dot {
+            width: 10px; height: 10px;
+            background: var(--violet-deep);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%,-50%);
+            transition: width .3s, height .3s, background .3s;
+            mix-blend-mode: multiply;
+        }
+        #c-ring {
+            width: 38px; height: 38px;
+            border: 2px solid var(--violet);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9998;
+            transform: translate(-50%,-50%);
+            transition: left .12s cubic-bezier(.23,1,.32,1), top .12s cubic-bezier(.23,1,.32,1), width .4s, height .4s;
+        }
+        .hover-trigger:hover ~ #c-ring,
+        a:hover ~ #c-ring { width: 60px; height: 60px; }
+
+        /* ── SCROLLBAR ────────────────────────── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--violet-soft); }
+        ::-webkit-scrollbar-thumb { background: var(--violet-deep); border-radius: 10px; }
+
+        /* ── UTILITY ──────────────────────────── */
+        .script { font-family: 'Great Vibes', cursive; }
+        .syne   { font-family: 'Syne', sans-serif; }
+        .violet { color: var(--violet-deep); }
+        .bg-violet { background: var(--violet-deep); }
+
+        /* ── BLOBS BG ─────────────────────────── */
         .blob {
             position: absolute;
+            border-radius: 50%;
             filter: blur(80px);
-            z-index: -1;
-            opacity: 0.4;
-            animation: float 10s infinite ease-in-out alternate;
-        }
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, -50px) scale(1.1); }
+            pointer-events: none;
+            z-index: 0;
         }
 
-        /* Hover sur les images du portfolio */
-        .portfolio-item { overflow: hidden; position: relative; border-radius: 1.5rem; }
-        .portfolio-item img { transition: transform 0.7s ease; }
-        .portfolio-item:hover img { transform: scale(1.1); }
-        .portfolio-overlay {
-            background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);
-            opacity: 0; transition: opacity 0.3s ease;
+        /* ── GRAIN ────────────────────────────── */
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.022; pointer-events: none; z-index: 9990;
         }
-        .portfolio-item:hover .portfolio-overlay { opacity: 1; }
-        
-        /* Grille bento pour les services */
-        .bento-card {
+
+        /* ── NAV ──────────────────────────────── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 800;
+            background: var(--white);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            padding: 0 5%;
+            height: 68px;
+            display: flex; align-items: center; justify-content: space-between;
+            transition: all .4s;
+        }
+        nav.scrolled {
+            height: 60px;
+            box-shadow: 0 4px 30px rgba(147,51,234,0.1);
+        }
+        .nav-logo { display: flex; align-items: center; gap: .6rem; text-decoration: none; }
+        .nav-logo img { height: 46px; width: 46px; object-fit: contain; border-radius: 10px; }
+        .nav-logo-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.7rem; color: var(--violet-deep);
+            line-height: 1;
+        }
+
+        /* Liens de navigation */
+        .nav-links {
+            display: flex; align-items: center; gap: .25rem;
+        }
+        .nav-links a {
+            font-family: 'Nunito', sans-serif;
+            font-size: .93rem; font-weight: 600;
+            color: #374151;
+            text-decoration: none;
+            padding: .5rem .9rem;
+            border-radius: 8px;
+            position: relative;
+            transition: color .25s, background .25s;
+        }
+        /* Underline animé sous chaque lien */
+        .nav-links a::after {
+            content: '';
+            position: absolute; bottom: 4px; left: .9rem; right: .9rem; height: 2px;
+            background: var(--violet-deep);
+            border-radius: 10px;
+            transform: scaleX(0); transform-origin: center;
+            transition: transform .3s cubic-bezier(.23,1,.32,1);
+        }
+        .nav-links a:hover { color: var(--violet-deep); }
+        .nav-links a:hover::after,
+        .nav-links a.active::after { transform: scaleX(1); }
+        .nav-links a.active { color: var(--violet-deep); }
+
+        /* Bouton Contact */
+        .btn-nav {
+            font-family: 'Nunito', sans-serif;
+            font-size: .9rem; font-weight: 700;
+            padding: .65rem 1.6rem;
+            background: linear-gradient(135deg, var(--violet-deep), var(--violet-dark));
+            color: var(--white);
+            border: none; border-radius: 50px; cursor: none;
+            margin-left: .75rem;
+            box-shadow: 0 4px 15px rgba(147,51,234,0.25);
+            transition: all .35s;
+        }
+        .btn-nav:hover {
+            background: linear-gradient(135deg, var(--violet-dark), #4c1d95);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(147,51,234,.4);
+        }
+        .mob-btn { display: none; background: none; border: none; font-size: 1.6rem; cursor: none; color: var(--black); }
+
+        /* ── HERO ─────────────────────────────── */
+        #home {
+            min-height: 100vh;
+            background: var(--black-soft);
+            position: relative; overflow: hidden;
+            display: flex; align-items: center;
+            padding: 9rem 5% 6rem;
+        }
+        .hero-blob1 { width: 600px; height: 600px; background: rgba(168,85,247,.35); top: -150px; right: -100px; }
+        .hero-blob2 { width: 400px; height: 400px; background: rgba(192,132,252,.2); bottom: -100px; left: 5%; }
+        .hero-content { position: relative; z-index: 2; max-width: 800px; }
+        .hero-chip {
+            display: inline-flex; align-items: center; gap: .6rem;
+            background: rgba(192,132,252,.15);
+            border: 1px solid rgba(192,132,252,.3);
+            backdrop-filter: blur(10px);
+            padding: .5rem 1.2rem; border-radius: 50px;
+            margin-bottom: 2.5rem;
+        }
+        .hero-chip span {
+            font-family: 'Syne', sans-serif;
+            font-size: .68rem; letter-spacing: .15em; text-transform: uppercase;
+            color: var(--violet);
+        }
+        .hero-chip .pulse {
+            width: 7px; height: 7px;
+            background: var(--violet); border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
+
+        .hero-h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3.2rem, 8vw, 7.5rem);
+            font-weight: 800; line-height: 1;
+            letter-spacing: -.02em; color: var(--white);
+            margin-bottom: 1rem;
+        }
+        .hero-h1 .script-line {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(4rem, 9.5vw, 9rem);
+            font-weight: 400;
+            color: var(--violet);
+            line-height: 1.05;
+            display: block;
+        }
+        .hero-sub {
+            font-size: 1rem; font-weight: 300; line-height: 1.8;
+            color: rgba(255,255,255,.55); max-width: 480px;
+            margin: 2rem 0 3rem;
+        }
+        .hero-sub strong { color: rgba(255,255,255,.85); font-weight: 600; }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn-hero {
+            display: inline-flex; align-items: center; gap: .75rem;
+            padding: 1rem 2.5rem; border-radius: 50px;
+            font-family: 'Syne', sans-serif;
+            font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+            cursor: none; transition: all .35s; border: none;
+        }
+        .btn-hero-primary { background: var(--violet); color: var(--black); }
+        .btn-hero-primary:hover { background: var(--violet-deep); color: white; transform: translateY(-3px); box-shadow: 0 14px 36px rgba(192,132,252,.4); }
+        .btn-hero-ghost { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,.2); }
+        .btn-hero-ghost:hover { border-color: var(--violet); color: var(--violet); }
+
+        .hero-right {
+            position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+            z-index: 2; display: flex; flex-direction: column; gap: 1.5rem;
+        }
+        .hero-stat {
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(192,132,252,.2);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 2rem; border-radius: 20px;
+            text-align: center; min-width: 160px;
+        }
+        .hero-stat-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.8rem; font-weight: 800; color: var(--violet);
+            line-height: 1;
+        }
+        .hero-stat-label {
+            font-size: .72rem; color: rgba(255,255,255,.5);
+            letter-spacing: .1em; text-transform: uppercase; margin-top: .25rem;
+        }
+
+        /* ── TICKER ───────────────────────────── */
+        .ticker-wrap {
+            overflow: hidden;
+            background: var(--violet-deep);
+            padding: .85rem 0;
+        }
+        .ticker-track {
+            display: flex; width: max-content;
+            animation: ticker 30s linear infinite;
+        }
+        @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+        .ticker-item {
+            display: inline-flex; align-items: center; gap: 1.5rem;
+            padding: 0 2rem;
+            font-family: 'Syne', sans-serif;
+            font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+            color: rgba(255,255,255,.75); white-space: nowrap;
+        }
+        .ticker-item .dot { width: 5px; height: 5px; background: rgba(255,255,255,.4); border-radius: 50%; }
+        .ticker-item strong { color: white; }
+
+        /* ── SECTIONS ─────────────────────────── */
+        .section { padding: 8rem 5%; }
+        .section-tag {
+            display: inline-flex; align-items: center; gap: .75rem;
+            font-family: 'Syne', sans-serif;
+            font-size: .68rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+            color: var(--violet-deep);
+            background: var(--violet-soft);
+            padding: .4rem 1rem; border-radius: 50px;
+            margin-bottom: 1.5rem;
+        }
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 800; line-height: 1.05; letter-spacing: -.02em;
+        }
+        .section-title .script {
+            font-size: clamp(3rem, 5.5vw, 5rem);
+            line-height: 1.1;
+        }
+
+        /* ── SERVICES ─────────────────────────── */
+        #services { background: var(--white-off); }
+        .services-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 4rem; gap: 2rem; flex-wrap: wrap; }
+        .services-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1.5px; background: var(--gray-light);
+            border: 1.5px solid var(--gray-light);
+            overflow: hidden; border-radius: 24px;
+        }
+        .service-card {
+            background: var(--white);
+            padding: 2.5rem; position: relative; overflow: hidden;
+            transition: all .5s cubic-bezier(.23,1,.32,1);
+            cursor: none;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, var(--violet-deep), var(--violet-dark));
+            opacity: 0; transition: opacity .4s;
+        }
+        .service-card:hover::before { opacity: 1; }
+        .service-card > * { position: relative; z-index: 1; }
+        .service-num {
+            font-family: 'Syne', sans-serif;
+            font-size: .65rem; font-weight: 700; letter-spacing: .15em;
+            color: var(--violet-deep); text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            transition: color .3s;
+        }
+        .service-card:hover .service-num { color: rgba(255,255,255,.6); }
+        .service-icon {
+            font-size: 2.5rem; color: var(--violet-deep);
+            margin-bottom: 1.25rem; display: block;
+            transition: all .4s;
+        }
+        .service-card:hover .service-icon { color: white; transform: scale(1.15) rotate(8deg); }
+        .service-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.3rem; font-weight: 700;
+            margin-bottom: .75rem; transition: color .3s;
+        }
+        .service-card:hover .service-name { color: white; }
+        .service-desc {
+            font-size: .85rem; font-weight: 300; line-height: 1.7;
+            color: var(--gray); transition: color .3s;
+        }
+        .service-card:hover .service-desc { color: rgba(255,255,255,.7); }
+        .service-cta {
+            display: inline-flex; align-items: center; gap: .5rem;
+            margin-top: 1.75rem;
+            font-family: 'Syne', sans-serif;
+            font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+            color: var(--violet-deep); background: none; border: none; cursor: none;
+            transition: all .3s;
+        }
+        .service-card:hover .service-cta { color: white; gap: .9rem; }
+        .service-mega {
+            grid-column: span 3;
+            background: var(--black-soft);
+            color: white;
+            display: flex; align-items: center; justify-content: space-between; gap: 3rem;
+            flex-wrap: wrap;
+        }
+        .service-mega::before { background: linear-gradient(135deg, var(--violet-dark), #1a1a2e); opacity: 0; }
+        .service-mega:hover::before { opacity: 1; }
+        .service-mega .service-num { color: var(--violet); }
+        .service-mega .service-name { color: white; }
+        .service-mega .service-desc { color: rgba(255,255,255,.5); }
+
+        /* ── PORTFOLIO ────────────────────────── */
+        #portfolio { background: var(--black-soft); }
+        .portfolio-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; gap: 2rem; flex-wrap: wrap; }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            grid-template-rows: 300px 220px;
+            gap: 12px;
+        }
+        .p-item {
+            overflow: hidden; border-radius: 16px;
+            position: relative; cursor: none;
+        }
+        .p-item:first-child { grid-row: span 2; }
+        .p-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform .8s cubic-bezier(.23,1,.32,1), filter .5s;
+            filter: brightness(.85) saturate(.9);
+        }
+        .p-item:hover img { transform: scale(1.08); filter: brightness(.65) saturate(1.1); }
+        .p-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(to top, rgba(13,13,13,.9) 0%, transparent 55%);
+            display: flex; flex-direction: column; justify-content: flex-end;
+            padding: 1.75rem;
+            opacity: 0; transition: opacity .4s;
+        }
+        .p-item:hover .p-overlay { opacity: 1; }
+        .p-tag {
+            font-family: 'Syne', sans-serif;
+            font-size: .62rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+            color: var(--violet); margin-bottom: .4rem;
+        }
+        .p-name {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.2rem; font-weight: 700; color: white;
+        }
+        .p-badge {
+            position: absolute; top: 1rem; right: 1rem;
+            width: 38px; height: 38px;
+            background: var(--violet);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1rem;
+            transform: scale(0) rotate(-45deg);
+            transition: all .4s cubic-bezier(.23,1,.32,1);
+        }
+        .p-item:hover .p-badge { transform: scale(1) rotate(0); }
+
+        /* ── ABOUT ────────────────────────────── */
+        #about {
+            background: var(--violet-bg);
+        }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+        .about-image-wrap { position: relative; }
+        .about-img {
+            width: 100%; aspect-ratio: 3/4; object-fit: cover;
+            border-radius: 40px;
+            box-shadow: 0 40px 80px rgba(147,51,234,.2);
+        }
+        .about-card {
+            position: absolute; bottom: -1.5rem; right: -2rem;
+            background: var(--violet-deep); color: white;
+            padding: 1.5rem 2rem; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(147,51,234,.35);
+        }
+        .about-card-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.8rem; font-weight: 800; line-height: 1;
+        }
+        .about-card-label { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; opacity: .75; margin-top: .2rem; }
+        .about-deco {
+            position: absolute; top: -2rem; left: -2rem;
+            width: 120px; height: 120px;
+            background: var(--violet-soft);
+            border-radius: 50%; z-index: -1;
+        }
+        .about-script-quote {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem; color: var(--violet-deep);
+            line-height: 1.2; margin-bottom: 1.5rem;
+        }
+        .about-body {
+            font-size: .95rem; font-weight: 300; line-height: 1.9;
+            color: var(--gray); margin-bottom: 2rem;
+        }
+        .about-values { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2.5rem; }
+        .about-val {
+            display: flex; align-items: flex-start; gap: 1rem;
             background: white;
-            border-radius: 1.5rem;
-            padding: 2rem;
-            border: 1px solid rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
+            padding: 1.25rem 1.5rem; border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(147,51,234,.06);
+            transition: transform .3s;
         }
-        .bento-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px -15px rgba(0,0,0,0.05);
-            border-color: rgba(139, 92, 246, 0.3);
+        .about-val:hover { transform: translateX(6px); }
+        .about-val-icon {
+            width: 40px; height: 40px; flex-shrink: 0;
+            background: var(--violet-soft);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--violet-deep); font-size: 1.2rem;
+        }
+        .about-val-title { font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; margin-bottom: .2rem; }
+        .about-val-desc { font-size: .8rem; color: var(--gray); line-height: 1.5; }
+
+        /* ── TESTIMONIALS ─────────────────────── */
+        #testimonials { background: var(--white); }
+        .testi-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 4rem; }
+        .testi-card {
+            background: var(--white-off);
+            border: 1.5px solid var(--violet-soft);
+            padding: 2.5rem; border-radius: 24px;
+            position: relative; overflow: hidden;
+            transition: all .4s;
+        }
+        .testi-card::before {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--violet), var(--violet-dark));
+            transform: scaleX(0); transform-origin: left;
+            transition: transform .5s cubic-bezier(.23,1,.32,1);
+        }
+        .testi-card:hover::before { transform: scaleX(1); }
+        .testi-card:hover { border-color: var(--violet); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(192,132,252,.15); }
+        .testi-quote {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem; color: var(--violet-soft);
+            line-height: .8; margin-bottom: 1rem;
+        }
+        .testi-stars { display: flex; gap: .3rem; color: var(--violet-deep); margin-bottom: 1.25rem; font-size: .9rem; }
+        .testi-text {
+            font-size: .92rem; font-weight: 400; line-height: 1.8;
+            color: #444; font-style: italic; margin-bottom: 2rem;
+        }
+        .testi-author { display: flex; align-items: center; gap: .9rem; }
+        .testi-av {
+            width: 46px; height: 46px;
+            background: var(--violet-soft);
+            border: 2px solid var(--violet);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem; font-weight: 800; color: var(--violet-deep);
+        }
+        .testi-name { font-family: 'Syne', sans-serif; font-size: .88rem; font-weight: 700; }
+        .testi-role { font-size: .72rem; color: var(--gray); }
+
+        /* ── CTA ──────────────────────────────── */
+        #cta {
+            background: var(--black-soft);
+            position: relative; overflow: hidden;
+            text-align: center;
+        }
+        .cta-blob1 { width: 500px; height: 500px; background: rgba(168,85,247,.25); top: -100px; left: -100px; }
+        .cta-blob2 { width: 400px; height: 400px; background: rgba(192,132,252,.15); bottom: -80px; right: -80px; }
+        .cta-inner { position: relative; z-index: 2; max-width: 720px; margin: 0 auto; }
+        .cta-tag {
+            display: inline-flex; align-items: center; gap: .6rem;
+            background: rgba(192,132,252,.12);
+            border: 1px solid rgba(192,132,252,.25);
+            padding: .5rem 1.2rem; border-radius: 50px; margin-bottom: 2rem;
+        }
+        .cta-tag span {
+            font-family: 'Syne', sans-serif;
+            font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; color: var(--violet);
+        }
+        .cta-h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 800; color: white; line-height: 1.05; margin-bottom: 1rem;
+        }
+        .cta-script {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3rem, 7vw, 6rem);
+            color: var(--violet); display: block; line-height: 1.1;
+        }
+        .cta-sub { font-size: .95rem; font-weight: 300; color: rgba(255,255,255,.5); max-width: 450px; margin: 0 auto 3rem; line-height: 1.8; }
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: .9rem;
+            padding: 1.1rem 3rem; border-radius: 50px;
+            background: var(--violet); color: var(--black-soft);
+            font-family: 'Syne', sans-serif;
+            font-size: .78rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+            border: none; cursor: none; transition: all .4s;
+        }
+        .btn-cta:hover { background: white; transform: translateY(-4px); box-shadow: 0 20px 50px rgba(192,132,252,.3); }
+
+        /* ── FOOTER ───────────────────────────── */
+        footer {
+            background: var(--black);
+            border-top: 1px solid rgba(192,132,252,.12);
+            padding: 2.5rem 5%;
+            display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+        }
+        .footer-logo { display: flex; align-items: center; gap: .75rem; text-decoration: none; }
+        .footer-logo img { height: 42px; width: 42px; object-fit: contain; border-radius: 10px; }
+        .footer-logo-text { font-family: 'Great Vibes', cursive; font-size: 1.8rem; color: var(--violet); }
+        .footer-copy { font-size: .75rem; color: rgba(255,255,255,.35); letter-spacing: .05em; }
+        .footer-socials { display: flex; gap: .75rem; }
+        .footer-soc {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 1px solid rgba(192,132,252,.2);
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,.4); font-size: 1.05rem;
+            transition: all .3s; text-decoration: none; cursor: none;
+        }
+        .footer-soc:hover { border-color: var(--violet); color: var(--violet); background: rgba(192,132,252,.08); }
+
+        /* ── MOBILE MENU ──────────────────────── */
+        #mob-menu {
+            display: none; position: fixed; inset: 0; z-index: 700;
+            background: var(--black-soft);
+            flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
+        }
+        #mob-menu.open { display: flex; }
+        #mob-menu a {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.2rem; font-weight: 800; color: white;
+            text-decoration: none; transition: color .3s;
+        }
+        #mob-menu a:hover { color: var(--violet); }
+        #mob-menu .btn-mob { background: var(--violet-deep); color: white; border: none; padding: 1rem 3rem; border-radius: 50px; font-family: 'Syne', sans-serif; font-size: .85rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; cursor: none; margin-top: 1rem; }
+
+        /* ── REVEAL ───────────────────────────── */
+        .reveal { opacity: 0; transform: translateY(36px); transition: opacity .8s cubic-bezier(.23,1,.32,1), transform .8s cubic-bezier(.23,1,.32,1); }
+        .reveal.visible { opacity: 1; transform: none; }
+        .rd1{transition-delay:.1s} .rd2{transition-delay:.2s} .rd3{transition-delay:.3s} .rd4{transition-delay:.4s}
+
+        /* ── RESPONSIVE ───────────────────────── */
+        @media(max-width:960px){
+            nav { padding: 1.25rem 5%; }
+            .nav-links { display: none; }
+            .mob-btn { display: block; }
+            #home { padding: 8rem 5% 5rem; }
+            .hero-right { display: none; }
+            .services-grid { grid-template-columns: 1fr; border-radius: 16px; }
+            .service-mega { grid-column: span 1; flex-direction: column; }
+            .portfolio-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+            .p-item:first-child { grid-row: span 1; grid-column: span 2; }
+            .about-grid { grid-template-columns: 1fr; }
+            .about-card { right: 0; }
+            .testi-grid { grid-template-columns: 1fr; }
+            footer { flex-direction: column; text-align: center; }
+            .portfolio-header { flex-direction: column; align-items: flex-start; }
+            .services-header { flex-direction: column; align-items: flex-start; }
+        }
+        @media(max-width:600px){
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .p-item:first-child { grid-column: span 1; }
         }
     </style>
 </head>
-<body class="antialiased flex flex-col min-h-screen">
+<body>
+    <div id="c-dot"></div>
+    <div id="c-ring"></div>
 
-    <!-- Blobs décoratifs de fond -->
-    <div class="blob bg-sacrea-accent1 w-96 h-96 rounded-full top-[-10%] left-[-10%]"></div>
-    <div class="blob bg-sacrea-accent2 w-96 h-96 rounded-full top-[20%] right-[-10%] hidden md:block" style="animation-delay: -5s;"></div>
-
-    <!-- NAVIGATION -->
-    <nav class="fixed w-full z-50 top-0 bg-white/80 backdrop-blur-xl border-b border-gray-100 transition-all duration-300" id="navbar">
-        <div class="container mx-auto px-6 h-20 flex justify-between items-center">
-            <!-- LOGO : Remplacez src="logo.png" par le vrai lien de votre logo -->
-            <a href="#home" class="flex items-center gap-3">
-                <img src="logo.png" onerror="this.src='https://placehold.co/100x40/0f172a/FFF?text=SACRÉA'" alt="Logo SACRÉA" class="h-10 w-auto object-contain">
-                <span class="font-display font-bold text-2xl tracking-tight hidden sm:block text-sacrea-accent1">SACRÉA</span>
-            </a>
-
-            <!-- Menu Desktop -->
-            <div class="hidden lg:flex items-center space-x-8 text-sm font-semibold tracking-wide text-sacrea-dark">
-                <a href="#home" class="hover:text-sacrea-accent1 transition">Accueil</a>
-                <a href="#services" class="hover:text-sacrea-accent1 transition">Services</a>
-                <a href="#portfolio" class="hover:text-sacrea-accent1 transition">Portfolio</a>
-                <a href="#about" class="hover:text-sacrea-accent1 transition">À Propos</a>
-                <a href="#testimonials" class="hover:text-sacrea-accent1 transition">Témoignages</a>
-                <a href="#contact" class="btn-gradient px-6 py-2.5 rounded-full text-sm font-bold shadow-lg">Contact</a>
-            </div>
-            
-            <!-- Mobile Menu Button -->
-            <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="lg:hidden text-2xl text-sacrea-dark">
-                <i class="ph ph-list"></i>
-            </button>
+    <!-- ── NAV ── -->
+    <nav id="navbar">
+        <a href="#home" class="nav-logo">
+            <img src="/mnt/user-data/uploads/logo.jpeg" onerror="this.style.display='none'" alt="Sa créa Logo">
+            <span class="nav-logo-text">Sa créa</span>
+        </a>
+        <div class="nav-links" id="nav-links">
+            <a href="#home" class="active" id="nav-accueil">Accueil</a>
+            <a href="#services" id="nav-services">Services</a>
+            <a href="#portfolio" id="nav-portfolio">Portfolio</a>
+            <a href="#about" id="nav-about">À Propos</a>
+            <a href="#testimonials" id="nav-testi">Témoignages</a>
+            <button class="btn-nav" onclick="wa('Bonjour Sa créa ! Je veux discuter d\'un projet.')">Contact</button>
         </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden lg:hidden bg-white/95 backdrop-blur-xl border-t border-gray-100 p-6 absolute w-full shadow-2xl">
-            <div class="flex flex-col space-y-4 font-semibold text-center">
-                <a href="#home" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="py-2 hover:text-sacrea-accent1">Accueil</a>
-                <a href="#services" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="py-2 hover:text-sacrea-accent1">Services</a>
-                <a href="#portfolio" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="py-2 hover:text-sacrea-accent1">Portfolio</a>
-                <a href="#about" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="py-2 hover:text-sacrea-accent1">À Propos</a>
-                <a href="#testimonials" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="py-2 hover:text-sacrea-accent1">Témoignages</a>
-                <a href="#contact" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="btn-gradient py-3 rounded-xl mt-4">Contact</a>
-            </div>
-        </div>
+        <button class="mob-btn" id="mob-btn"><i class="ph ph-list"></i></button>
     </nav>
 
-    <main class="flex-grow pt-20">
-        
-        <!-- 1. HERO SECTION -->
-        <section id="home" class="relative pt-20 pb-20 md:pt-32 md:pb-32 overflow-hidden">
-            <div class="container mx-auto px-6 relative z-10 text-center max-w-5xl">
-                
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/60 backdrop-blur-sm border border-sacrea-accent1/20 mb-8 shadow-sm mx-auto">
-                    <span class="w-2.5 h-2.5 bg-sacrea-accent2 rounded-full animate-pulse"></span>
-                    <span class="text-xs font-bold uppercase tracking-widest text-sacrea-dark">Studio de Design Créatif</span>
+    <div id="mob-menu">
+        <a href="#services" onclick="closeMob()">Services</a>
+        <a href="#portfolio" onclick="closeMob()">Portfolio</a>
+        <a href="#about" onclick="closeMob()">À Propos</a>
+        <a href="#testimonials" onclick="closeMob()">Témoignages</a>
+        <button class="btn-mob" onclick="wa('Bonjour Sa créa !'); closeMob();">Démarrer un projet</button>
+    </div>
+
+    <!-- ── HERO ── -->
+    <section id="home">
+        <div class="blob hero-blob1"></div>
+        <div class="blob hero-blob2"></div>
+
+        <div class="hero-content">
+            <div class="hero-chip">
+                <span class="pulse"></span>
+                <span>Studio Créatif — Ouagadougou, Burkina Faso</span>
+            </div>
+
+            <h1 class="hero-h1">
+                Votre vision,
+                <span class="script-line">sublimée.</span>
+            </h1>
+
+            <p class="hero-sub">
+                Sa créa transforme les idées des entrepreneurs africains en <strong>identités visuelles inoubliables</strong>. Du logo à la charte graphique, nous donnons à votre marque le visuel qu'elle mérite.
+            </p>
+
+            <div class="hero-actions">
+                <button class="btn-hero btn-hero-primary" onclick="wa('Bonjour Sa créa ! Je veux lancer mon projet.')">
+                    <i class="ph-fill ph-rocket-launch"></i> Lancer mon projet
+                </button>
+                <a href="#portfolio" class="btn-hero btn-hero-ghost">
+                    Voir le portfolio <i class="ph ph-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-right">
+            <div class="hero-stat">
+                <div class="hero-stat-num">100+</div>
+                <div class="hero-stat-label">Projets livrés</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">5★</div>
+                <div class="hero-stat-label">Note clients</div>
+            </div>
+            <div class="hero-stat" style="background:rgba(192,132,252,.15);border-color:rgba(192,132,252,.3)">
+                <div class="hero-stat-num" style="font-size:1.5rem;font-family:'Great Vibes',cursive;color:var(--violet)">Sa créa</div>
+                <div class="hero-stat-label">Agence Créa</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── TICKER ── -->
+    <div class="ticker-wrap">
+        <div class="ticker-track">
+            <span class="ticker-item"><strong>Logos</strong><span class="dot"></span></span>
+            <span class="ticker-item">Charte Graphique<span class="dot"></span></span>
+            <span class="ticker-item"><strong>Packaging</strong><span class="dot"></span></span>
+            <span class="ticker-item">Réseaux Sociaux<span class="dot"></span></span>
+            <span class="ticker-item"><strong>Flyers & Affiches</strong><span class="dot"></span></span>
+            <span class="ticker-item">Branding Complet<span class="dot"></span></span>
+            <span class="ticker-item"><strong>Identité Visuelle</strong><span class="dot"></span></span>
+            <span class="ticker-item">Supports Imprimés<span class="dot"></span></span>
+            <!-- repeat -->
+            <span class="ticker-item"><strong>Logos</strong><span class="dot"></span></span>
+            <span class="ticker-item">Charte Graphique<span class="dot"></span></span>
+            <span class="ticker-item"><strong>Packaging</strong><span class="dot"></span></span>
+            <span class="ticker-item">Réseaux Sociaux<span class="dot"></span></span>
+            <span class="ticker-item"><strong>Flyers & Affiches</strong><span class="dot"></span></span>
+            <span class="ticker-item">Branding Complet<span class="dot"></span></span>
+            <span class="ticker-item"><strong>Identité Visuelle</strong><span class="dot"></span></span>
+            <span class="ticker-item">Supports Imprimés<span class="dot"></span></span>
+        </div>
+    </div>
+
+    <!-- ── SERVICES ── -->
+    <section id="services" class="section">
+        <div class="services-header">
+            <div>
+                <div class="section-tag reveal"><i class="ph ph-star-four"></i> Nos Expertises</div>
+                <h2 class="section-title reveal rd1">
+                    Ce que nous créons<br>
+                    <span class="script violet">pour vous.</span>
+                </h2>
+            </div>
+            <p class="reveal rd2" style="font-size:.9rem;color:var(--gray);max-width:300px;line-height:1.7;">Du logo jusqu'à votre stratégie visuelle complète — chaque pixel est pensé pour vous démarquer.</p>
+        </div>
+
+        <div class="services-grid reveal rd2">
+            <div class="service-card">
+                <div class="service-num">01</div>
+                <i class="ph ph-bezier-curve service-icon"></i>
+                <div class="service-name">Création de Logos</div>
+                <p class="service-desc">Un logo unique, mémorable et professionnel qui incarne l'essence de votre marque dès le premier regard.</p>
+                <button class="service-cta" onclick="wa('Je suis intéressé par la création d\'un logo.')">
+                    Demander un devis <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-num">02</div>
+                <i class="ph ph-swatches service-icon"></i>
+                <div class="service-name">Charte Graphique</div>
+                <p class="service-desc">Couleurs, typographies, règles d'usage — un guide complet pour une communication cohérente et forte.</p>
+                <button class="service-cta" onclick="wa('Je souhaite créer une charte graphique.')">
+                    Demander un devis <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-num">03</div>
+                <i class="ph ph-layout service-icon"></i>
+                <div class="service-name">Supports Imprimés</div>
+                <p class="service-desc">Cartes, flyers, affiches, brochures — des designs prêts à imprimer qui font impression à chaque échange.</p>
+                <button class="service-cta" onclick="wa('J\'ai besoin de designs pour des supports imprimés.')">
+                    Demander un devis <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-num">04</div>
+                <i class="ph ph-instagram-logo service-icon"></i>
+                <div class="service-name">Réseaux Sociaux</div>
+                <p class="service-desc">Posts, stories, bannières — des visuels qui capturent l'attention et boostent votre engagement en ligne.</p>
+                <button class="service-cta" onclick="wa('Je veux des visuels pour mes réseaux sociaux.')">
+                    Demander un devis <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="service-card">
+                <div class="service-num">05</div>
+                <i class="ph ph-package service-icon"></i>
+                <div class="service-name">Packaging Design</div>
+                <p class="service-desc">Des emballages premium qui séduisent, racontent votre histoire et incitent à l'achat dès le premier coup d'œil.</p>
+                <button class="service-cta" onclick="wa('Je cherche un design packaging.')">
+                    Demander un devis <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="service-card" style="background:var(--violet-soft)">
+                <div class="service-num">06</div>
+                <i class="ph ph-magic-wand service-icon"></i>
+                <div class="service-name">Branding Complet</div>
+                <p class="service-desc">Logo + charte + supports + social media — un package complet pour une identité de marque professionnelle et cohérente.</p>
+                <button class="service-cta" onclick="wa('Je suis intéressé par un branding complet.')">
+                    Demander un devis <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="service-card service-mega">
+                <div>
+                    <div class="service-num">Projet Spécial</div>
+                    <div class="service-name" style="font-size:1.8rem">Une vision hors du commun ?</div>
+                    <p class="service-desc">Nous adorons les défis créatifs uniques. Parlons de votre projet sur-mesure.</p>
                 </div>
-                
-                <h1 class="font-display text-5xl md:text-7xl lg:text-8xl font-extrabold leading-[1.1] tracking-tight mb-8 text-sacrea-dark">
-                    Donnez vie à vos idées avec <br> <span class="text-sacrea-accent1">SACRÉA.</span>
-                </h1>
-                
-                <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
-                <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-12 font-medium leading-relaxed">
-                    SACRÉA, votre agence africaine de communication digitale. Du Burkina Faso vers le monde, nous créons des identités visuelles qui célèbrent notre héritage et embrassent l'avenir.
+                <button class="btn-hero btn-hero-primary" onclick="wa('Bonjour, j\'ai un projet créatif unique à vous soumettre.')">
+                    Discutons-en <i class="ph-bold ph-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── PORTFOLIO ── -->
+    <section id="portfolio" class="section">
+        <div class="portfolio-header">
+            <div>
+                <div class="section-tag reveal" style="background:rgba(192,132,252,.12);color:var(--violet)"><i class="ph ph-images"></i> Réalisations</div>
+                <h2 class="section-title reveal rd1" style="color:white">
+                    Notre <span class="script" style="color:var(--violet)">Portfolio.</span>
+                </h2>
+            </div>
+            <button class="btn-hero btn-hero-ghost reveal rd2" onclick="wa('Je voudrais voir plus de réalisations de Sa créa.')">
+                Voir tout <i class="ph ph-arrow-up-right"></i>
+            </button>
+        </div>
+
+        <div class="portfolio-grid reveal rd2">
+            <div class="p-item">
+                <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop" alt="Branding cosmétique">
+                <div class="p-overlay">
+                    <div class="p-tag">Identité Visuelle</div>
+                    <div class="p-name">Refonte Marque Cosmétique</div>
+                </div>
+                <div class="p-badge"><i class="ph-bold ph-arrow-up-right"></i></div>
+            </div>
+            <div class="p-item">
+                <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop" alt="Social Media">
+                <div class="p-overlay">
+                    <div class="p-tag">Social Media</div>
+                    <div class="p-name">Campagne Restaurant</div>
+                </div>
+                <div class="p-badge"><i class="ph-bold ph-arrow-up-right"></i></div>
+            </div>
+            <div class="p-item">
+                <img src="https://images.unsplash.com/photo-1634942537034-2531766767d1?q=80&w=800&auto=format&fit=crop" alt="Packaging">
+                <div class="p-overlay">
+                    <div class="p-tag">Packaging</div>
+                    <div class="p-name">Design Boisson Artisanale</div>
+                </div>
+                <div class="p-badge"><i class="ph-bold ph-arrow-up-right"></i></div>
+            </div>
+            <div class="p-item">
+                <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800&auto=format&fit=crop" alt="Logo Design">
+                <div class="p-overlay">
+                    <div class="p-tag">Logo & Branding</div>
+                    <div class="p-name">Identité Startup</div>
+                </div>
+                <div class="p-badge"><i class="ph-bold ph-arrow-up-right"></i></div>
+            </div>
+            <div class="p-item">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?q=80&w=800&auto=format&fit=crop" alt="Supports Print">
+                <div class="p-overlay">
+                    <div class="p-tag">Print</div>
+                    <div class="p-name">Collection Supports Mode</div>
+                </div>
+                <div class="p-badge"><i class="ph-bold ph-arrow-up-right"></i></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── ABOUT ── -->
+    <section id="about" class="section">
+        <div class="about-grid">
+            <div class="about-image-wrap reveal">
+                <div class="about-deco"></div>
+                <img class="about-img" src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=800&auto=format&fit=crop" alt="Équipe Sa créa au travail">
+                <div class="about-card">
+                    <div class="about-card-num">100+</div>
+                    <div class="about-card-label">Projets livrés</div>
+                </div>
+            </div>
+
+            <div class="reveal rd1">
+                <div class="section-tag"><i class="ph ph-info"></i> Notre Histoire</div>
+                <p class="about-script-quote">Créer, c'est donner vie à l'invisible.</p>
+                <p class="about-body">
+                    Née au cœur du Burkina Faso, Sa créa est l'agence de communication digitale qui croit que chaque entrepreneur africain mérite une identité visuelle de prestige international. De Ouagadougou vers le monde entier, nous fusionnons héritage culturel et innovation pour créer des visuels authentiques qui résonnent.
                 </p>
-
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <button onclick="contactWhatsApp('Bonjour SACRÉA, je souhaite discuter d\'un projet de design !')" class="btn-gradient px-8 py-4 rounded-full text-base font-bold flex items-center gap-2 w-full sm:w-auto justify-center">
-                        <i class="ph-fill ph-rocket-launch text-xl"></i> Lancer mon projet
-                    </button>
-                    <a href="#portfolio" class="px-8 py-4 rounded-full bg-white text-sacrea-dark border border-slate-200 hover:border-sacrea-accent1 hover:text-sacrea-accent1 transition text-base font-bold flex items-center justify-center gap-2 w-full sm:w-auto">
-                        <i class="ph-bold ph-eye"></i> Voir nos réalisations
-                    </a>
+                <div class="about-values">
+                    <div class="about-val">
+                        <div class="about-val-icon"><i class="ph ph-lightning"></i></div>
+                        <div>
+                            <div class="about-val-title">Livraison Rapide & Fiable</div>
+                            <div class="about-val-desc">Vos délais sont sacrés. Nous livrons sans compromis sur la qualité.</div>
+                        </div>
+                    </div>
+                    <div class="about-val">
+                        <div class="about-val-icon"><i class="ph ph-magic-wand"></i></div>
+                        <div>
+                            <div class="about-val-title">100% Sur-Mesure</div>
+                            <div class="about-val-desc">Zéro template. Chaque création est unique comme votre projet.</div>
+                        </div>
+                    </div>
+                    <div class="about-val">
+                        <div class="about-val-icon"><i class="ph ph-globe-hemisphere-west"></i></div>
+                        <div>
+                            <div class="about-val-title">Standards Internationaux</div>
+                            <div class="about-val-desc">Afrique de cœur, niveau mondial. Vos visuels sont prêts pour toutes les scènes.</div>
+                        </div>
+                    </div>
                 </div>
+                <button class="btn-hero btn-hero-primary" onclick="wa('Bonjour Sa créa ! J\'aimerais en savoir plus sur l\'agence.')">
+                    Parlons de votre projet <i class="ph-bold ph-arrow-right"></i>
+                </button>
             </div>
+        </div>
+    </section>
 
-            <!-- Image de fond décorative / mockup -->
-            <div class="container mx-auto px-6 mt-20 relative">
-                <div class="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white bg-white">
-                    <img src="https://images.unsplash.com/photo-1600132806370-bf17e65e942f?q=80&w=2000&auto=format&fit=crop" alt="Workspace Designer" class="w-full h-[300px] md:h-[500px] object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-sacrea-dark/60 to-transparent flex items-end justify-center pb-10">
-                        <div class="flex gap-4 md:gap-12 bg-white/10 backdrop-blur-md px-8 py-4 rounded-3xl border border-white/20 text-white">
-                            <div class="text-center">
-                                <div class="font-display font-bold text-2xl md:text-4xl">+150</div>
-                                <div class="text-xs md:text-sm uppercase tracking-wider opacity-80">Projets Livrés</div>
-                            </div>
-                            <div class="w-px bg-white/20"></div>
-                            <div class="text-center">
-                                <div class="font-display font-bold text-2xl md:text-4xl">100%</div>
-                                <div class="text-xs md:text-sm uppercase tracking-wider opacity-80">Sur Mesure</div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- ── TESTIMONIALS ── -->
+    <section id="testimonials" class="section">
+        <div style="text-align:center;margin-bottom:.5rem">
+            <div class="section-tag reveal" style="display:inline-flex"><i class="ph ph-chat-circle-text"></i> Ils nous font confiance</div>
+        </div>
+        <h2 class="section-title reveal rd1" style="text-align:center;margin-bottom:0">
+            Ce que disent <span class="script violet">nos clients.</span>
+        </h2>
+
+        <div class="testi-grid reveal rd2">
+            <div class="testi-card">
+                <div class="testi-quote">"</div>
+                <div class="testi-stars">
+                    <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
                 </div>
-            </div>
-        </section>
-
-        <!-- 2. SERVICES (BENTO GRID) -->
-        <section id="services" class="py-24 bg-white relative">
-            <div class="container mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="font-display text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-sacrea-dark">NOTRE EXPERTISE</h2>
-                    <p class="text-slate-500 text-lg">Nous couvrons tous vos besoins en communication visuelle à travers 4 grands pôles d'expertise.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
-                    
-                    <!-- Pôle 1 : Identité & Marque -->
-                    <div class="bento-card group">
-                        <div class="w-14 h-14 rounded-2xl bg-sacrea-accent1/10 flex items-center justify-center mb-6 text-sacrea-accent1 group-hover:bg-sacrea-accent1 group-hover:text-white transition-colors duration-300">
-                            <i class="ph-fill ph-bezier-curve text-3xl"></i>
-                        </div>
-                        <h3 class="font-display text-2xl font-bold mb-4">Identité Visuelle</h3>
-                        <p class="text-slate-500 mb-6">La base de votre communication. Nous créons une image forte et mémorable pour votre entreprise.</p>
-                        <ul class="space-y-3">
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-sacrea-accent2"></i> Création de Logos</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-sacrea-accent2"></i> Cartes de visite personnalisées</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-sacrea-accent2"></i> Design de Packaging</li>
-                        </ul>
-                    </div>
-
-                    <!-- Pôle 2 : Digital & Vidéo -->
-                    <div class="bento-card group">
-                        <div class="w-14 h-14 rounded-2xl bg-sacrea-accent2/10 flex items-center justify-center mb-6 text-sacrea-accent2 group-hover:bg-sacrea-accent2 group-hover:text-white transition-colors duration-300">
-                            <i class="ph-fill ph-video-camera text-3xl"></i>
-                        </div>
-                        <h3 class="font-display text-2xl font-bold mb-4">Digital & Réseaux Sociaux</h3>
-                        <p class="text-slate-500 mb-6">Captez l'attention en ligne avec des contenus dynamiques, esthétiques et adaptés à chaque plateforme.</p>
-                        <ul class="space-y-3">
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-sacrea-accent1"></i> Posts et Stories Instagram/Facebook</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-sacrea-accent1"></i> Bannières et Visuels Web</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-sacrea-accent1"></i> Montage Vidéo Publicitaire</li>
-                        </ul>
-                    </div>
-
-                    <!-- Pôle 3 : Print & Publicité -->
-                    <div class="bento-card group">
-                        <div class="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-6 text-orange-500 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300">
-                            <i class="ph-fill ph-printer text-3xl"></i>
-                        </div>
-                        <h3 class="font-display text-2xl font-bold mb-4">Print & Publicité</h3>
-                        <p class="text-slate-500 mb-6">Des supports imprimés de haute qualité pour communiquer sur le terrain lors de vos événements.</p>
-                        <ul class="space-y-3">
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-orange-500"></i> Affiches et Flyers publicitaires</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-orange-500"></i> Brochures et Catalogues</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-orange-500"></i> Cartes d'invitations (Mariage, Gala...)</li>
-                        </ul>
-                    </div>
-
-                    <!-- Pôle 4 : Corporate & Pro -->
-                    <div class="bento-card group">
-                        <div class="w-14 h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center mb-6 text-blue-500 group-hover:bg-blue-500 group-hover:text-white transition-colors duration-300">
-                            <i class="ph-fill ph-file-pdf text-3xl"></i>
-                        </div>
-                        <h3 class="font-display text-2xl font-bold mb-4">Documents Professionnels</h3>
-                        <p class="text-slate-500 mb-6">Démarquez-vous dans le monde professionnel avec des documents parfaitement mis en page.</p>
-                        <ul class="space-y-3">
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-blue-500"></i> Présentations Pro (PowerPoint, PDF)</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-blue-500"></i> Conception de CV Design</li>
-                            <li class="flex items-center gap-2 font-medium"><i class="ph-bold ph-check text-blue-500"></i> Lettres de motivation esthétiques</li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. PORTFOLIO / GALERIE -->
-        <section id="portfolio" class="py-24 bg-slate-50">
-            <div class="container mx-auto px-6">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-                    <div class="max-w-2xl">
-                        <h2 class="font-display text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-sacrea-dark">NOS RÉALISATIONS</h2>
-                        <p class="text-slate-500 text-lg">Un aperçu de notre touche créative. Nous adaptons notre style à l'ADN de chaque client.</p>
-                    </div>
-                    <button onclick="contactWhatsApp('Bonjour, j\'aimerais voir plus d\'exemples de vos créations !')" class="text-sacrea-accent1 font-bold flex items-center gap-2 hover:text-sacrea-accent2 transition">
-                        Voir plus de projets <i class="ph-bold ph-arrow-right"></i>
-                    </button>
-                </div>
-
-                <!-- Grille Masonry Portfolio -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    
-                    <!-- Item 1: Social Media -->
-                    <div class="portfolio-item group h-80">
-                        <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=800&auto=format&fit=crop" alt="Réseaux Sociaux" class="w-full h-full object-cover">
-                        <div class="portfolio-overlay absolute inset-0 flex flex-col justify-end p-6">
-                            <span class="text-sacrea-accent2 font-bold text-sm tracking-wider uppercase mb-1">Réseaux Sociaux</span>
-                            <h3 class="text-white font-display text-2xl font-bold">Pack Posts Instagram</h3>
-                        </div>
-                    </div>
-
-                    <!-- Item 2: Logo / Branding -->
-                    <div class="portfolio-item group h-80 lg:row-span-2 lg:h-[664px]">
-                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800&auto=format&fit=crop" alt="Branding et Logo" class="w-full h-full object-cover">
-                        <div class="portfolio-overlay absolute inset-0 flex flex-col justify-end p-6">
-                            <span class="text-sacrea-accent1 font-bold text-sm tracking-wider uppercase mb-1">Identité Visuelle</span>
-                            <h3 class="text-white font-display text-2xl font-bold">Création Logo & Charte</h3>
-                        </div>
-                    </div>
-
-                    <!-- Item 3: Print / Flyer -->
-                    <div class="portfolio-item group h-80">
-                        <img src="https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?q=80&w=800&auto=format&fit=crop" alt="Design Print" class="w-full h-full object-cover">
-                        <div class="portfolio-overlay absolute inset-0 flex flex-col justify-end p-6">
-                            <span class="text-orange-400 font-bold text-sm tracking-wider uppercase mb-1">Print</span>
-                            <h3 class="text-white font-display text-2xl font-bold">Affiche Événementielle</h3>
-                        </div>
-                    </div>
-
-                    <!-- Item 4: Packaging -->
-                    <div class="portfolio-item group h-80">
-                        <img src="https://images.unsplash.com/photo-1605640840428-583ea61f77d3?q=80&w=800&auto=format&fit=crop" alt="Packaging" class="w-full h-full object-cover">
-                        <div class="portfolio-overlay absolute inset-0 flex flex-col justify-end p-6">
-                            <span class="text-blue-400 font-bold text-sm tracking-wider uppercase mb-1">Design Produit</span>
-                            <h3 class="text-white font-display text-2xl font-bold">Packaging Cosmétique</h3>
-                        </div>
-                    </div>
-
-                    <!-- Item 5: CV / Presentation -->
-                    <div class="portfolio-item group h-80">
-                        <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=800&auto=format&fit=crop" alt="CV Design" class="w-full h-full object-cover">
-                        <div class="portfolio-overlay absolute inset-0 flex flex-col justify-end p-6">
-                            <span class="text-emerald-400 font-bold text-sm tracking-wider uppercase mb-1">Corporate</span>
-                            <h3 class="text-white font-display text-2xl font-bold">Design CV & Lettre</h3>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. POURQUOI NOUS (PROCESS) -->
-        <section id="about" class="py-24 bg-sacrea-dark text-white relative overflow-hidden">
-            <!-- Décoration fond sombre -->
-            <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-creative opacity-10 rounded-l-[100px]"></div>
-            
-            <div class="container mx-auto px-6 relative z-10">
-                <div class="flex flex-col lg:flex-row gap-16 items-center">
-                    <div class="lg:w-1/2">
-                        <h2 class="font-display text-4xl md:text-5xl font-extrabold tracking-tight mb-6">À PROPOS DE <br><span class="text-sacrea-accent1">SACRÉA</span></h2>
-                        <p class="text-slate-400 text-lg mb-4 leading-relaxed">
-                            Née au cœur du Burkina Faso, SACRÉA est une agence de communication digitale qui célèbre la créativité africaine. Nous croyons que chaque entrepreneur africain mérite une identité visuelle qui reflète sa richesse culturelle.
-                        </p>
-                        <p class="text-slate-400 text-lg mb-8 leading-relaxed">
-                            De Ouagadougou vers le monde entier, nous combinons traditions africaines et innovation digitale pour créer des expériences visuelles authentiques et impactantes.
-                        </p>
-                        
-                        <div class="space-y-6">
-                            <div class="flex gap-4">
-                                <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
-                                    <span class="font-bold text-sacrea-accent2">1</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-xl mb-1">Briefing & Écoute</h4>
-                                    <p class="text-slate-400 text-sm">Nous prenons le temps de comprendre vos besoins, vos goûts et vos objectifs.</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
-                                    <span class="font-bold text-sacrea-accent1">2</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-xl mb-1">Création & Propositions</h4>
-                                    <p class="text-slate-400 text-sm">Notre équipe conçoit des maquettes sur mesure basées sur les tendances actuelles.</p>
-                                </div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20">
-                                    <span class="font-bold text-orange-400">3</span>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-xl mb-1">Livraison Rapide (HD)</h4>
-                                    <p class="text-slate-400 text-sm">Ajustements finaux et livraison des fichiers en Haute Définition, prêts à l'emploi.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="lg:w-1/2 w-full">
-                        <div class="bg-white/5 backdrop-blur-xl p-8 md:p-10 rounded-[2rem] border border-white/10 shadow-2xl relative">
-                            <!-- Floating Element -->
-                            <div class="absolute -top-6 -right-6 bg-sacrea-accent2 text-white p-4 rounded-2xl shadow-xl transform rotate-12">
-                                <i class="ph-fill ph-star text-3xl"></i>
-                            </div>
-                            
-                            <h3 class="font-display text-2xl font-bold mb-6">Demandez votre devis gratuit</h3>
-                            <p class="text-slate-400 mb-8">Racontez-nous brièvement votre besoin. Que ce soit pour un logo, un flyer ou une vidéo, nous vous répondons rapidement avec une estimation.</p>
-                            
-                            <form class="space-y-4" onsubmit="event.preventDefault(); sendWhatsAppForm();">
-                                <div>
-                                    <input type="text" id="wa-nom" placeholder="Votre Nom / Entreprise" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-sacrea-accent1 transition" required>
-                                </div>
-                                <div>
-                                    <select id="wa-service" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-slate-400 focus:outline-none focus:border-sacrea-accent1 transition" required>
-                                        <option value="" disabled selected>Service recherché...</option>
-                                        <option value="Logo / Identité">Logo / Carte de visite</option>
-                                        <option value="Réseaux Sociaux">Publications Réseaux Sociaux</option>
-                                        <option value="Print">Affiches / Flyers / Brochures</option>
-                                        <option value="Montage Vidéo">Montage Vidéo</option>
-                                        <option value="CV / Prez">CV / Présentation Pro</option>
-                                        <option value="Autre">Autre projet créatif</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <textarea id="wa-message" rows="3" placeholder="Parlez-nous de votre projet..." class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-slate-400 focus:outline-none focus:border-sacrea-accent1 transition" required></textarea>
-                                </div>
-                                <button type="submit" class="btn-gradient w-full py-4 rounded-xl font-bold text-lg flex justify-center items-center gap-2">
-                                    <i class="ph-fill ph-whatsapp-logo text-2xl"></i> Envoyer via WhatsApp
-                                </button>
-                            </form>
-                        </div>
+                <p class="testi-text">"Sa créa a su capturer exactement l'essence de ma marque. Le logo et la charte graphique sont magnifiques. Une équipe réactive et vraiment professionnelle !"</p>
+                <div class="testi-author">
+                    <div class="testi-av">A</div>
+                    <div>
+                        <div class="testi-name">Aminata T.</div>
+                        <div class="testi-role">Fondatrice — Boutique en ligne</div>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- NOUVELLE SECTION TÉMOIGNAGES -->
-        <section id="testimonials" class="py-24 bg-slate-50">
-            <div class="container mx-auto px-6">
-                <div class="text-center max-w-3xl mx-auto mb-16">
-                    <h2 class="font-display text-4xl md:text-5xl font-extrabold tracking-tight mb-6 text-sacrea-dark">ILS NOUS ONT FAIT CONFIANCE</h2>
-                    <p class="text-slate-500 text-lg">Découvrez ce que nos clients disent de notre collaboration et de notre créativité.</p>
+            <div class="testi-card">
+                <div class="testi-quote">"</div>
+                <div class="testi-stars">
+                    <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
                 </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    <!-- Avis 1 -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative hover:-translate-y-2 transition duration-300">
-                        <i class="ph-fill ph-quotes text-4xl text-sacrea-accent1/20 absolute top-6 left-6"></i>
-                        <div class="flex items-center gap-1 text-sacrea-accent2 mb-6 justify-end relative z-10">
-                            <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
-                        </div>
-                        <p class="text-slate-600 mb-6 relative z-10 italic">"SACRÉA a su capturer exactement l'essence de notre marque. Le logo et la charte graphique sont magnifiques. Une équipe réactive et très pro !"</p>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-sacrea-accent1/10 rounded-full flex items-center justify-center text-sacrea-accent1 font-bold">A</div>
-                            <div>
-                                <h4 class="font-bold text-sacrea-dark">Amina T.</h4>
-                                <p class="text-xs text-slate-500">Fondatrice, Boutique Élégance</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Avis 2 -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative transform md:-translate-y-6 hover:-translate-y-8 transition duration-300">
-                        <i class="ph-fill ph-quotes text-4xl text-sacrea-accent1/20 absolute top-6 left-6"></i>
-                        <div class="flex items-center gap-1 text-sacrea-accent2 mb-6 justify-end relative z-10">
-                            <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
-                        </div>
-                        <p class="text-slate-600 mb-6 relative z-10 italic">"Le montage de notre vidéo publicitaire a dépassé nos attentes. C'est dynamique, moderne, et ça a immédiatement boosté nos ventes sur les réseaux."</p>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-sacrea-accent2/10 rounded-full flex items-center justify-center text-sacrea-accent2 font-bold">K</div>
-                            <div>
-                                <h4 class="font-bold text-sacrea-dark">Karim S.</h4>
-                                <p class="text-xs text-slate-500">Directeur Marketing</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Avis 3 -->
-                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100 relative hover:-translate-y-2 transition duration-300">
-                        <i class="ph-fill ph-quotes text-4xl text-sacrea-accent1/20 absolute top-6 left-6"></i>
-                        <div class="flex items-center gap-1 text-sacrea-accent2 mb-6 justify-end relative z-10">
-                            <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i>
-                        </div>
-                        <p class="text-slate-600 mb-6 relative z-10 italic">"Très satisfait des flyers et affiches créés pour notre événement. Le design a vraiment fait la différence pour attirer du monde. Merci l'équipe !"</p>
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-orange-500/10 rounded-full flex items-center justify-center text-orange-500 font-bold">M</div>
-                            <div>
-                                <h4 class="font-bold text-sacrea-dark">Marc D.</h4>
-                                <p class="text-xs text-slate-500">Organisateur d'Événements</p>
-                            </div>
-                        </div>
+                <p class="testi-text">"Le packaging de mes cosmétiques est absolument premium. Mes clientes s'arrêtent dessus instantanément. Les ventes ont clairement augmenté depuis."</p>
+                <div class="testi-author">
+                    <div class="testi-av" style="background:rgba(232,93,58,.1);border-color:rgba(232,93,58,.4);color:#e85d3a">K</div>
+                    <div>
+                        <div class="testi-name">Karim O.</div>
+                        <div class="testi-role">CEO — Marque Cosmétique</div>
                     </div>
                 </div>
             </div>
-        </section>
-
-        <!-- 5. BANNIÈRE CONTACT RAPIDE -->
-        <section id="contact" class="py-20 bg-white">
-            <div class="container mx-auto px-6">
-                <div class="bg-gradient-to-r from-sacrea-accent1/10 to-sacrea-accent2/10 rounded-[3rem] p-10 md:p-16 text-center border border-sacrea-accent1/20 relative overflow-hidden">
-                    <h2 class="font-display text-3xl md:text-5xl font-extrabold mb-6 text-sacrea-dark">Prêt à transformer votre image ?</h2>
-                    <p class="text-slate-600 mb-8 max-w-2xl mx-auto text-lg">Ne laissez pas un design amateur freiner votre succès. Contactez SACRÉA aujourd'hui pour donner une allure professionnelle à votre projet.</p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onclick="contactWhatsApp('Bonjour SACRÉA, j\'ai besoin de vos services de design !')" class="btn-gradient px-8 py-4 rounded-full font-bold text-lg flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
-                            <i class="ph-fill ph-chat-circle-text text-xl"></i> Discuter de mon projet
-                        </button>
+            <div class="testi-card">
+                <div class="testi-quote">"</div>
+                <div class="testi-stars">
+                    <i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star"></i><i class="ph-fill ph-star-half"></i>
+                </div>
+                <p class="testi-text">"Mes posts Instagram ont un niveau complètement différent maintenant. L'engagement a décollé et j'ai de nouveaux clients chaque semaine grâce aux visuels."</p>
+                <div class="testi-author">
+                    <div class="testi-av" style="background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.4);color:#60a5fa">S</div>
+                    <div>
+                        <div class="testi-name">Stéphane D.</div>
+                        <div class="testi-role">Gérant — Restaurant</div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="bg-white border-t border-slate-100 py-12">
-        <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" onerror="this.src='https://placehold.co/100x40/0f172a/FFF?text=SACRÉA'" alt="Logo SACRÉA" class="h-8 w-auto grayscale opacity-80">
-                    <span class="font-display font-bold text-xl tracking-tight text-sacrea-accent1">SACRÉA</span>
-                </div>
-                
-                <div class="text-slate-500 text-sm text-center md:text-left">
-                    &copy; 2026 Agence SACRÉA. Création Visuelle & Design. Tous droits réservés.
-                </div>
-
-                <div class="flex items-center gap-4">
-                    <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-sacrea-accent1 hover:text-white transition">
-                        <i class="ph-fill ph-instagram-logo text-xl"></i>
-                    </a>
-                    <a href="#" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-sacrea-accent1 hover:text-white transition">
-                        <i class="ph-fill ph-facebook-logo text-xl"></i>
-                    </a>
-                    <button onclick="contactWhatsApp('Bonjour !')" class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-[#25D366] hover:text-white transition">
-                        <i class="ph-fill ph-whatsapp-logo text-xl"></i>
-                    </button>
-                </div>
+    <!-- ── CTA ── -->
+    <section id="cta" class="section">
+        <div class="blob cta-blob1"></div>
+        <div class="blob cta-blob2"></div>
+        <div class="cta-inner">
+            <div class="cta-tag reveal">
+                <span class="pulse" style="background:var(--violet)"></span>
+                <span>Prochaine Étape</span>
             </div>
+            <h2 class="cta-h2 reveal rd1">
+                Prêt à créer<br>
+                <span class="cta-script">quelque chose d'inoubliable ?</span>
+            </h2>
+            <p class="cta-sub reveal rd2">
+                Une conversation suffit pour transformer votre vision en identité visuelle qui fait tourner les têtes.
+            </p>
+            <div class="reveal rd3">
+                <button class="btn-cta" onclick="wa('Bonjour Sa créa ! Je suis prêt à créer quelque chose d\'exceptionnel pour ma marque.')">
+                    <i class="ph-fill ph-whatsapp-logo" style="font-size:1.2rem"></i>
+                    Démarrer maintenant
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <a href="#home" class="footer-logo">
+            <img src="/mnt/user-data/uploads/logo.jpeg" onerror="this.style.display='none'" alt="Sa créa">
+            <span class="footer-logo-text">Sa créa</span>
+        </a>
+        <p class="footer-copy">© 2026 Sa créa Agence — Tous droits réservés.</p>
+        <div class="footer-socials">
+            <a href="#" class="footer-soc"><i class="ph-fill ph-instagram-logo"></i></a>
+            <a href="#" class="footer-soc"><i class="ph-fill ph-facebook-logo"></i></a>
+            <a href="#" class="footer-soc"><i class="ph-fill ph-tiktok-logo"></i></a>
         </div>
     </footer>
 
-    <!-- SCRIPT WHATSAPP -->
     <script>
-        // Numéro WhatsApp de SACRÉA mis à jour
-        const NUMERO_WHATSAPP = "22657713010"; 
+        // CURSOR
+        const dot = document.getElementById('c-dot');
+        const ring = document.getElementById('c-ring');
+        let mx=0,my=0,rx=0,ry=0;
+        document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+        (function tick(){
+            dot.style.cssText = `left:${mx}px;top:${my}px`;
+            rx += (mx-rx)*.13; ry += (my-ry)*.13;
+            ring.style.cssText = `left:${rx}px;top:${ry}px`;
+            requestAnimationFrame(tick);
+        })();
 
-        function contactWhatsApp(message) {
-            const url = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-        }
+        // NAV SCROLL + ACTIVE LINK
+        const nav = document.getElementById('navbar');
+        const sections = [
+            { id: 'home',         link: document.getElementById('nav-accueil') },
+            { id: 'services',     link: document.getElementById('nav-services') },
+            { id: 'portfolio',    link: document.getElementById('nav-portfolio') },
+            { id: 'about',        link: document.getElementById('nav-about') },
+            { id: 'testimonials', link: document.getElementById('nav-testi') },
+        ];
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', scrollY > 40);
+            // Active link
+            let current = 'home';
+            sections.forEach(s => {
+                const el = document.getElementById(s.id);
+                if(el && el.getBoundingClientRect().top <= 100) current = s.id;
+            });
+            sections.forEach(s => {
+                s.link.classList.toggle('active', s.id === current);
+            });
+        });
 
-        // Fonction pour le formulaire spécifique
-        function sendWhatsAppForm() {
-            const nom = document.getElementById('wa-nom').value;
-            const service = document.getElementById('wa-service').value;
-            const msg = document.getElementById('wa-message').value;
+        // MOBILE MENU
+        const mob = document.getElementById('mob-menu');
+        document.getElementById('mob-btn').addEventListener('click', () => mob.classList.toggle('open'));
+        function closeMob(){ mob.classList.remove('open'); }
 
-            const textFinal = `*NOUVELLE DEMANDE DE DEVIS* 🎨\n\n*Nom :* ${nom}\n*Service souhaité :* ${service}\n*Description du projet :*\n${msg}\n\nMerci !`;
-            
-            contactWhatsApp(textFinal);
-        }
+        // SCROLL REVEAL
+        const revEls = document.querySelectorAll('.reveal');
+        const io = new IntersectionObserver(entries => {
+            entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); } });
+        }, { threshold: 0.1 });
+        revEls.forEach(el => io.observe(el));
+
+        // WHATSAPP
+        function wa(msg){ window.open(`https://wa.me/22657713010?text=${encodeURIComponent(msg)}`,'_blank'); }
+
+        // SMOOTH SCROLL
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if(t) t.scrollIntoView({behavior:'smooth'});
+            });
+        });
     </script>
 </body>
 </html>
